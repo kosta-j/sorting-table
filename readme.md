@@ -5,5 +5,12 @@ API endpoint https://swapi.dev/
 
 Надо выгребсти всех персонажей
 
-необходимые столбцы: 'name' 'height' 'mass' 'birth year' 'gender' 'count films'
-'home planet name'
+необходимые столбцы:
+
+ <!-- 'name'
+ 'height'
+ 'mass'
+ 'birth year'
+ 'gender'
+ 'count films'
+ 'home planet name' -->
