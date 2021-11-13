@@ -1,0 +1,31 @@
+{
+  "name": "sorting-table",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "tailwindcss build app.css -o public/style.css",
+    "alpinjs-dev": "npx esbuild index.js --outfile=dist/bundle.js --bundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosta-j/sorting-table.git"
+  },
+  "keywords": [],
+  "author": "Konstantin Zhukov <zhukov.konst.sl@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kosta-j/sorting-table/issues"
+  },
+  "homepage": "https://github.com/kosta-j/sorting-table#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.3.11",
+    "tailwindcss": "^2.2.19"
+  },
+  "dependencies": {
+    "alpinejs": "^3.5.1",
+    "esbuild": "^0.13.13"
+  }
+}
