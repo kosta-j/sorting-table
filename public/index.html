@@ -146,90 +146,131 @@
                 </tr>
               </thead>
 
-              <tbody class="bg-white">
-                <tr>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="flex items-center">
-                      <div class="text-sm font-medium leading-5 text-gray-900">
-                        Name
+              <tbody class="bg-white" x-data="{heroes: getHeroes()}">
+                <template x-for="hero in heroes" :key="hero.name">
+                  <tr>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div class="flex items-center">
+                        <div
+                          class="text-sm font-medium leading-5 text-gray-900"
+                          x-text="hero.name"
+                        >
+                          >
+                        </div>
                       </div>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">height</div>
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">mass</div>
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">
-                      birth year
-                    </div>
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">gender</div>
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">
-                      count films
-                    </div>
-                  </td>
-                  <td
-                    class="
-                      px-6
-                      py-4
-                      whitespace-no-wrap
-                      border-b border-gray-200
-                    "
-                  >
-                    <div class="text-sm leading-5 text-gray-500">
-                      home planet name
-                    </div>
-                  </td>
-                </tr>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.height"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.mass"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.birth_year"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.gender"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.films.length"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        <!--
+                        x-text="hero.homeworld"
+                        --
+                      >
+                        >
+                      </div>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>

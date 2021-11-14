@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "tailwindcss build app.css -o public/style.css",
-    "alpinjs-dev": "npx esbuild index.js --outfile=dist/bundle.js --bundle"
+    "alpinjs-dev": "npx esbuild index.js --outfile=dist/bundle.js --bundle",
+    "alpinjs-dev-w": "npx esbuild index.js --outfile=dist/bundle.js --bundle --watch"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.5.1",
-    "esbuild": "^0.13.13"
+    "esbuild": "^0.13.13",
+    "yarn": "^1.22.17"
   }
 }
