@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.5.1",
+    "axios": "^0.24.0",
     "esbuild": "^0.13.13",
     "yarn": "^1.22.17"
   }

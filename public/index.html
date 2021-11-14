@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tailwind CSS</title>
+    <title>SWAPI</title>
     <!-- when we run npm build style.css will appear -->
     <link rel="stylesheet" href="style.css" />
     <script src="/dist/bundle.js" defer></script>
@@ -28,7 +28,7 @@
               sm:rounded-lg
             "
           >
-            <table class="min-w-full">
+            <table class="min-w-full" x-data="app()">
               <thead>
                 <tr>
                   <th
@@ -146,8 +146,8 @@
                 </tr>
               </thead>
 
-              <tbody class="bg-white" x-data="{heroes: getHeroes()}">
-                <template x-for="hero in heroes" :key="hero.name">
+              <tbody class="bg-white" x-init="await getData()">
+                <template x-for="hero in data" :key="hero.name">
                   <tr>
                     <td
                       class="
@@ -161,9 +161,7 @@
                         <div
                           class="text-sm font-medium leading-5 text-gray-900"
                           x-text="hero.name"
-                        >
-                          >
-                        </div>
+                        ></div>
                       </div>
                     </td>
 
@@ -177,12 +175,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.height"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                     <td
                       class="
@@ -194,12 +188,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.mass"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                     <td
                       class="
@@ -211,12 +201,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.birth_year"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                     <td
                       class="
@@ -228,12 +214,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.gender"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                     <td
                       class="
@@ -245,12 +227,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.films.length"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                     <td
                       class="
@@ -262,12 +240,8 @@
                     >
                       <div
                         class="text-sm leading-5 text-gray-500"
-                        <!--
                         x-text="hero.homeworld"
-                        --
-                      >
-                        >
-                      </div>
+                      ></div>
                     </td>
                   </tr>
                 </template>
