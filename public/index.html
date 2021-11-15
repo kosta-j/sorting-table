@@ -146,7 +146,7 @@
                 </tr>
               </thead>
 
-              <tbody class="bg-white" x-init="await getData()">
+              <tbody class="bg-white" x-init="await getAllCharacters()">
                 <template x-for="hero in data" :key="hero.name">
                   <tr>
                     <td

@@ -4403,74 +4403,53 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
   var src_default = alpine_default;
   var module_default = src_default;
 
-  // apiService.js
+  // index.js
   var BASE_URL = "https://swapi.dev/api/";
   var axios = require_axios2();
-  var swapiService = class {
-    constructor() {
-      this.page = 1;
-      this.totalPages = 1;
-    }
-    async getCharacters() {
-      const url = `${BASE_URL}people`;
-      try {
-        const { data: data2 } = await axios.get(url);
-        this.totalPages = data2.count;
-        return data2;
-      } catch (error2) {
-        console.error(error2);
-      }
-    }
-  };
-  var apiService = new swapiService();
-  var apiService_default = apiService;
-
-  // index.js
   window.Alpine = module_default;
   window.app = function() {
     return {
       data: [],
-      sortBy: "",
-      sortAsc: false,
-      async getData() {
-        this.resetData();
-        const { results } = await apiService_default.getCharacters();
-        this.setData(results);
-        console.log(this.data);
+      page: 1,
+      charactersPerPage: 10,
+      totalCharacters: 1,
+      async getAllCharacters() {
+        try {
+          const firstFetch = await this.getCharacters();
+          this.totalCharacters = firstFetch.count;
+          this.setData(firstFetch.results);
+          if (firstFetch.count <= 10) {
+            return;
+          }
+          const totalPages = Math.ceil(this.totalCharacters / this.charactersPerPage);
+          for (let i = 2; i <= totalPages; i++) {
+            this.setPage(i);
+            const { results } = await this.getCharacters();
+            this.appendData(results);
+          }
+        } catch (error2) {
+          console.error(error2);
+        }
+        console.log(`${this.data.length} characters added to the table`);
       },
-      resetData() {
-        this.data = [];
-        console.log("data reset");
-        console.log("from reset", JSON.parse(JSON.stringify(this.data)));
+      async getCharacters() {
+        console.log("getCharacters called");
+        const url = `${BASE_URL}people/?page=${this.page}`;
+        try {
+          const { data: data2 } = await axios.get(url);
+          return data2;
+        } catch (error2) {
+          console.error(error2);
+        }
       },
       setData(fetchedData) {
         this.data = fetchedData;
       },
-      sortByColumn($event) {
-        if (this.sortBy === $event.target.innerText) {
-          if (this.sortAsc) {
-            this.sortBy = "";
-            this.sortAsc = false;
-          } else {
-            this.sortAsc = !this.sortAsc;
-          }
-        } else {
-          this.sortBy = $event.target.innerText;
-        }
-        let rows = this.getTableRows().sort(this.sortCallback(Array.from($event.target.parentNode.children).indexOf($event.target))).forEach((tr) => {
-          this.$refs.tbody.appendChild(tr);
-        });
+      appendData(fetchedData) {
+        this.data.push(...fetchedData);
       },
-      getTableRows() {
-        return Array.from(this.$refs.tbody.querySelectorAll("tr"));
-      },
-      getCellValue(row, index) {
-        return row.children[index].innerText;
-      },
-      sortCallback(index) {
-        return (a, b) => ((row1, row2) => {
-          return row1 !== "" && row2 !== "" && !isNaN(row1) && !isNaN(row2) ? row1 - row2 : row1.toString().localeCompare(row2);
-        })(this.getCellValue(this.sortAsc ? a : b, index), this.getCellValue(this.sortAsc ? b : a, index));
+      setPage(newPage) {
+        this.page = newPage;
       }
     };
   };
