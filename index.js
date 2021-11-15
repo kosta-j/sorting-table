@@ -13,19 +13,25 @@ window.app = function () {
     charactersPerPage: 10,
     totalCharacters: 1,
     isLoading: false,
-    sortOrder: 'asc',
+    sortOrderDesc: false,
     sortBy: '',
 
     getAllCharacters: async function () {
       try {
-        this.isLoading = true;
+        this.setIsLoading(true);
+        // first 10 items page fetch
         const firstFetch = await this.getCharacters();
-        this.totalCharacters = firstFetch.count;
+
+        // save data and total characters count
+        this.setTotalCharacters(firstFetch.count);
         this.setData(firstFetch.results);
+
         if (firstFetch.count <= 10) {
-          this.isLoading = false;
+          this.setIsLoading(false);
           return;
         }
+
+        // count total pages based on first fetch and fetch and save all rest data
         const totalPages = Math.ceil(
           this.totalCharacters / this.charactersPerPage,
         );
@@ -38,7 +44,7 @@ window.app = function () {
       } catch (error) {
         console.error(error);
       } finally {
-        this.isLoading = false;
+        this.setIsLoading(false);
         console.log(`${this.data.length} characters added to the table`);
         console.log(this.data[0]);
       }
@@ -53,21 +59,27 @@ window.app = function () {
         console.error(error);
       }
     },
+
     setData: function (fetchedData) {
       this.data = fetchedData;
     },
     appendData: function (fetchedData) {
       this.data.push(...fetchedData);
     },
-    getData: function () {
-      return this.data;
-    },
     setPage: function (newPage) {
       this.page = newPage;
     },
+    setIsLoading: function (value) {
+      this.isLoading = value;
+      console.log('isLoading:', this.isLoading);
+    },
+    setTotalCharacters: function (value) {
+      this.totalCharacters = value;
+    },
 
-    compareValues: function (key, order = this.sortOrder) {
+    compareValues: function (key, order = this.sortOrderDesc) {
       console.log(key);
+
       if (this.isLoading) {
         console.log('sort return');
         return;
