@@ -12,15 +12,18 @@ window.app = function () {
     page: 1,
     charactersPerPage: 10,
     totalCharacters: 1,
-    // sortBy: '',
-    // sortAsc: false,
+    isLoading: false,
+    sortOrder: 'asc',
+    sortBy: '',
 
-    async getAllCharacters() {
+    getAllCharacters: async function () {
       try {
+        this.isLoading = true;
         const firstFetch = await this.getCharacters();
         this.totalCharacters = firstFetch.count;
         this.setData(firstFetch.results);
         if (firstFetch.count <= 10) {
+          this.isLoading = false;
           return;
         }
         const totalPages = Math.ceil(
@@ -34,12 +37,14 @@ window.app = function () {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        this.isLoading = false;
+        console.log(`${this.data.length} characters added to the table`);
+        console.log(this.data[0]);
       }
-      console.log(`${this.data.length} characters added to the table`);
     },
 
-    async getCharacters() {
-      console.log('getCharacters called');
+    getCharacters: async function () {
       const url = `${BASE_URL}people/?page=${this.page}`;
       try {
         const { data } = await axios.get(url);
@@ -48,63 +53,46 @@ window.app = function () {
         console.error(error);
       }
     },
-    setData(fetchedData) {
+    setData: function (fetchedData) {
       this.data = fetchedData;
     },
-    appendData(fetchedData) {
+    appendData: function (fetchedData) {
       this.data.push(...fetchedData);
     },
-    setPage(newPage) {
+    getData: function () {
+      return this.data;
+    },
+    setPage: function (newPage) {
       this.page = newPage;
     },
 
-    // async getData() {
-    //   this.resetData();
-    //   const { results } = await apiService.getAllCharacters();
-    //   this.setData(results);
-    // },
+    compareValues: function (key, order = this.sortOrder) {
+      console.log(key);
+      if (this.isLoading) {
+        console.log('sort return');
+        return;
+      }
 
-    // sortByColumn($event) {
-    //   if (this.sortBy === $event.target.innerText) {
-    //     if (this.sortAsc) {
-    //       this.sortBy = '';
-    //       this.sortAsc = false;
-    //     } else {
-    //       this.sortAsc = !this.sortAsc;
-    //     }
-    //   } else {
-    //     this.sortBy = $event.target.innerText;
-    //   }
+      return function innerSort(a, b) {
+        if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+          console.log(`property ${key} is not found`);
+          return 0;
+        }
 
-    //   let rows = this.getTableRows()
-    //     .sort(
-    //       this.sortCallback(
-    //         Array.from($event.target.parentNode.children).indexOf(
-    //           $event.target,
-    //         ),
-    //       ),
-    //     )
-    //     .forEach(tr => {
-    //       this.$refs.tbody.appendChild(tr);
-    //     });
-    // },
-    // getTableRows() {
-    //   return Array.from(this.$refs.tbody.querySelectorAll('tr'));
-    // },
-    // getCellValue(row, index) {
-    //   return row.children[index].innerText;
-    // },
-    // sortCallback(index) {
-    //   return (a, b) =>
-    //     ((row1, row2) => {
-    //       return row1 !== '' && row2 !== '' && !isNaN(row1) && !isNaN(row2)
-    //         ? row1 - row2
-    //         : row1.toString().localeCompare(row2);
-    //     })(
-    //       this.getCellValue(this.sortAsc ? a : b, index),
-    //       this.getCellValue(this.sortAsc ? b : a, index),
-    //     );
-    // },
+        const varA =
+          typeof a[key] === 'string' ? a[key].toLowerCase() : a[key].length;
+        const varB =
+          typeof b[key] === 'string' ? b[key].toLowerCase() : b[key].length;
+
+        let comparison = 0;
+        if (varA > varB) {
+          comparison = 1;
+        } else if (varA < varB) {
+          comparison = -1;
+        }
+        return order === 'desc' ? comparison * -1 : comparison;
+      };
+    },
   };
 };
 

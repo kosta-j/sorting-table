@@ -4413,12 +4413,17 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       page: 1,
       charactersPerPage: 10,
       totalCharacters: 1,
-      async getAllCharacters() {
+      isLoading: false,
+      sortOrder: "asc",
+      sortBy: "",
+      getAllCharacters: async function() {
         try {
+          this.isLoading = true;
           const firstFetch = await this.getCharacters();
           this.totalCharacters = firstFetch.count;
           this.setData(firstFetch.results);
           if (firstFetch.count <= 10) {
+            this.isLoading = false;
             return;
           }
           const totalPages = Math.ceil(this.totalCharacters / this.charactersPerPage);
@@ -4429,11 +4434,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           }
         } catch (error2) {
           console.error(error2);
+        } finally {
+          this.isLoading = false;
+          console.log(`${this.data.length} characters added to the table`);
+          console.log(this.data[0]);
         }
-        console.log(`${this.data.length} characters added to the table`);
       },
-      async getCharacters() {
-        console.log("getCharacters called");
+      getCharacters: async function() {
         const url = `${BASE_URL}people/?page=${this.page}`;
         try {
           const { data: data2 } = await axios.get(url);
@@ -4442,14 +4449,39 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           console.error(error2);
         }
       },
-      setData(fetchedData) {
+      setData: function(fetchedData) {
         this.data = fetchedData;
       },
-      appendData(fetchedData) {
+      appendData: function(fetchedData) {
         this.data.push(...fetchedData);
       },
-      setPage(newPage) {
+      getData: function() {
+        return this.data;
+      },
+      setPage: function(newPage) {
         this.page = newPage;
+      },
+      compareValues: function(key, order = this.sortOrder) {
+        console.log(key);
+        if (this.isLoading) {
+          console.log("sort return");
+          return;
+        }
+        return function innerSort(a, b) {
+          if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+            console.log(`property ${key} is not found`);
+            return 0;
+          }
+          const varA = typeof a[key] === "string" ? a[key].toLowerCase() : a[key].length;
+          const varB = typeof b[key] === "string" ? b[key].toLowerCase() : b[key].length;
+          let comparison = 0;
+          if (varA > varB) {
+            comparison = 1;
+          } else if (varA < varB) {
+            comparison = -1;
+          }
+          return order === "desc" ? comparison * -1 : comparison;
+        };
       }
     };
   };
