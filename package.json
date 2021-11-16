@@ -6,8 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-css": "tailwindcss build app.css -o public/style.css",
-    "alpinjs-dev": "npx esbuild index.js --outfile=dist/bundle.js --bundle",
-    "alpinjs-dev-w": "npx esbuild index.js --outfile=dist/bundle.js --bundle --watch"
+    "alpinjs-dev": "npx esbuild index.js --outfile=public/bundle.js --bundle",
+    "alpinjs-dev-w": "npx esbuild index.js --outfile=public/bundle.js --bundle --watch",
+    "pre-deploy": "yarn build-css && yarn alpinjs-dev",
+    "deploy": "gh-pages -d public"
   },
   "repository": {
     "type": "git",
@@ -29,6 +31,7 @@
     "alpinejs": "^3.5.1",
     "axios": "^0.24.0",
     "esbuild": "^0.13.13",
+    "gh-pages": "^3.2.3",
     "yarn": "^1.22.17"
   }
 }

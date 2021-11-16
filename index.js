@@ -64,15 +64,13 @@ window.app = function () {
 
     updateHomeworld: async function (array) {
       try {
-        const newArray = array.map(async item => {
+        array.map(async item => {
           const planet = await axios.get(item.homeworld);
           item.homeworld = planet.data.name;
           await this.appendData(item);
         });
       } catch (error) {
         console.log(error);
-      } finally {
-        console.log('planets updated');
       }
     },
 
@@ -84,7 +82,6 @@ window.app = function () {
     },
     setIsLoading: function (value) {
       this.isLoading = value;
-      console.log('isLoading:', this.isLoading);
     },
     setTotalCharacters: function (value) {
       this.totalCharacters = value;
@@ -102,9 +99,8 @@ window.app = function () {
     },
 
     compareValues: function (key, descending = this.sortOrderDesc) {
-      // avoiding sort while fetching
+      // avoid sorting while fetching
       if (this.isLoading) {
-        console.log('sort return');
         return;
       }
 
@@ -118,10 +114,9 @@ window.app = function () {
 
       return function innerSort(a, b) {
         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-          console.log(`property ${key} is not found`);
           return 0;
         }
-        // should be improved - this part is valid for string and array data types only
+        // could be improved - this part is valid for string and array data types only
         const varA =
           typeof a[key] === 'string' ? a[key].toLowerCase() : a[key].length;
         const varB =

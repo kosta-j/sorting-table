@@ -4450,15 +4450,13 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       },
       updateHomeworld: async function(array) {
         try {
-          const newArray = array.map(async (item) => {
+          array.map(async (item) => {
             const planet = await axios.get(item.homeworld);
             item.homeworld = planet.data.name;
             await this.appendData(item);
           });
         } catch (error2) {
           console.log(error2);
-        } finally {
-          console.log("planets updated");
         }
       },
       appendData: function(fetchedData) {
@@ -4469,7 +4467,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       },
       setIsLoading: function(value) {
         this.isLoading = value;
-        console.log("isLoading:", this.isLoading);
       },
       setTotalCharacters: function(value) {
         this.totalCharacters = value;
@@ -4487,7 +4484,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       },
       compareValues: function(key, descending = this.sortOrderDesc) {
         if (this.isLoading) {
-          console.log("sort return");
           return;
         }
         if (key !== this.sortBy) {
@@ -4498,7 +4494,6 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
         }
         return function innerSort(a, b) {
           if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-            console.log(`property ${key} is not found`);
             return 0;
           }
           const varA = typeof a[key] === "string" ? a[key].toLowerCase() : a[key].length;
