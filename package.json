@@ -8,7 +8,7 @@
     "build-css": "tailwindcss build app.css -o public/style.css",
     "alpinjs-dev": "npx esbuild index.js --outfile=public/bundle.js --bundle",
     "alpinjs-dev-w": "npx esbuild index.js --outfile=public/bundle.js --bundle --watch",
-    "pre-deploy": "yarn build-css && yarn alpinjs-dev",
+    "predeploy": "yarn build-css && yarn alpinjs-dev",
     "deploy": "gh-pages -d public"
   },
   "repository": {
