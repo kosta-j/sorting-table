@@ -4421,7 +4421,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           this.setIsLoading(true);
           const firstFetch = await this.getCharacters();
           this.setTotalCharacters(firstFetch.count);
-          this.setData(firstFetch.results);
+          await this.updateHomeworld(firstFetch.results);
           if (firstFetch.count <= 10) {
             this.setIsLoading(false);
             return;
@@ -4430,30 +4430,39 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           for (let i = 2; i <= totalPages; i++) {
             this.setPage(i);
             const { results } = await this.getCharacters();
-            this.appendData(results);
+            await this.updateHomeworld(results);
           }
         } catch (error2) {
           console.error(error2);
         } finally {
           this.setIsLoading(false);
-          console.log(`${this.data.length} characters added to the table`);
-          console.log(this.data[0]);
         }
       },
       getCharacters: async function() {
         const url = `${BASE_URL}people/?page=${this.page}`;
         try {
           const { data: data2 } = await axios.get(url);
-          return data2;
+          const { count, results } = data2;
+          return { count, results };
         } catch (error2) {
           console.error(error2);
         }
       },
-      setData: function(fetchedData) {
-        this.data = fetchedData;
+      updateHomeworld: async function(array) {
+        try {
+          const newArray = array.map(async (item) => {
+            const planet = await axios.get(item.homeworld);
+            item.homeworld = planet.data.name;
+            await this.appendData(item);
+          });
+        } catch (error2) {
+          console.log(error2);
+        } finally {
+          console.log("planets updated");
+        }
       },
       appendData: function(fetchedData) {
-        this.data.push(...fetchedData);
+        this.data.push(fetchedData);
       },
       setPage: function(newPage) {
         this.page = newPage;
@@ -4465,11 +4474,27 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
       setTotalCharacters: function(value) {
         this.totalCharacters = value;
       },
-      compareValues: function(key, order = this.sortOrderDesc) {
-        console.log(key);
+      setSortOrderDesc: function(value) {
+        this.sortOrderDesc = value;
+      },
+      toggleSortOrderDesc: function() {
+        if (this.sortOrderDesc) {
+        }
+        this.sortOrderDesc = !this.sortOrderDesc;
+      },
+      setSortBy: function(value) {
+        this.sortBy = value;
+      },
+      compareValues: function(key, descending = this.sortOrderDesc) {
         if (this.isLoading) {
           console.log("sort return");
           return;
+        }
+        if (key !== this.sortBy) {
+          this.setSortOrderDesc(false);
+          this.setSortBy(key);
+        } else if (key === this.sortBy) {
+          this.toggleSortOrderDesc();
         }
         return function innerSort(a, b) {
           if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
@@ -4484,7 +4509,7 @@ ${expression ? 'Expression: "' + expression + '"\n\n' : ""}`, el);
           } else if (varA < varB) {
             comparison = -1;
           }
-          return order === "desc" ? comparison * -1 : comparison;
+          return descending ? comparison * -1 : comparison;
         };
       }
     };

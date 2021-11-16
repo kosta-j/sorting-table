@@ -2,7 +2,6 @@ const BASE_URL = 'https://swapi.dev/api/';
 const axios = require('axios');
 
 import Alpine from 'alpinejs';
-// import apiService from './apiService';
 
 window.Alpine = Alpine;
 
@@ -19,34 +18,36 @@ window.app = function () {
     getAllCharacters: async function () {
       try {
         this.setIsLoading(true);
+
         // first 10 items page fetch
         const firstFetch = await this.getCharacters();
 
-        // save data and total characters count
+        // save total characters count
         this.setTotalCharacters(firstFetch.count);
-        this.setData(firstFetch.results);
+
+        // save first render data
+        await this.updateHomeworld(firstFetch.results);
 
         if (firstFetch.count <= 10) {
           this.setIsLoading(false);
           return;
         }
 
-        // count total pages based on first fetch and fetch and save all rest data
+        // count total pages based on first fetch
         const totalPages = Math.ceil(
           this.totalCharacters / this.charactersPerPage,
         );
+
+        // fetch and save all rest data
         for (let i = 2; i <= totalPages; i++) {
           this.setPage(i);
           const { results } = await this.getCharacters();
-          this.appendData(results);
-          //   console.log(`page ${i} appended`);
+          await this.updateHomeworld(results);
         }
       } catch (error) {
         console.error(error);
       } finally {
         this.setIsLoading(false);
-        console.log(`${this.data.length} characters added to the table`);
-        console.log(this.data[0]);
       }
     },
 
@@ -54,17 +55,29 @@ window.app = function () {
       const url = `${BASE_URL}people/?page=${this.page}`;
       try {
         const { data } = await axios.get(url);
-        return data;
+        const { count, results } = data;
+        return { count, results };
       } catch (error) {
         console.error(error);
       }
     },
 
-    setData: function (fetchedData) {
-      this.data = fetchedData;
+    updateHomeworld: async function (array) {
+      try {
+        const newArray = array.map(async item => {
+          const planet = await axios.get(item.homeworld);
+          item.homeworld = planet.data.name;
+          await this.appendData(item);
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        console.log('planets updated');
+      }
     },
+
     appendData: function (fetchedData) {
-      this.data.push(...fetchedData);
+      this.data.push(fetchedData);
     },
     setPage: function (newPage) {
       this.page = newPage;
@@ -76,13 +89,31 @@ window.app = function () {
     setTotalCharacters: function (value) {
       this.totalCharacters = value;
     },
+    setSortOrderDesc: function (value) {
+      this.sortOrderDesc = value;
+    },
+    toggleSortOrderDesc: function () {
+      if (this.sortOrderDesc) {
+      }
+      this.sortOrderDesc = !this.sortOrderDesc;
+    },
+    setSortBy: function (value) {
+      this.sortBy = value;
+    },
 
-    compareValues: function (key, order = this.sortOrderDesc) {
-      console.log(key);
-
+    compareValues: function (key, descending = this.sortOrderDesc) {
+      // avoiding sort while fetching
       if (this.isLoading) {
         console.log('sort return');
         return;
+      }
+
+      // sort order set up
+      if (key !== this.sortBy) {
+        this.setSortOrderDesc(false);
+        this.setSortBy(key);
+      } else if (key === this.sortBy) {
+        this.toggleSortOrderDesc();
       }
 
       return function innerSort(a, b) {
@@ -90,7 +121,7 @@ window.app = function () {
           console.log(`property ${key} is not found`);
           return 0;
         }
-
+        // should be improved - this part is valid for string and array data types only
         const varA =
           typeof a[key] === 'string' ? a[key].toLowerCase() : a[key].length;
         const varB =
@@ -102,7 +133,7 @@ window.app = function () {
         } else if (varA < varB) {
           comparison = -1;
         }
-        return order === 'desc' ? comparison * -1 : comparison;
+        return descending ? comparison * -1 : comparison;
       };
     },
   };
