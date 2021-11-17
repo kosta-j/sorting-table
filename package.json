@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-css": "tailwindcss build app.css -o public/style.css",
-    "alpinjs-dev": "npx esbuild index.js --outfile=public/bundle.js --bundle",
-    "alpinjs-dev-w": "npx esbuild index.js --outfile=public/bundle.js --bundle --watch",
-    "predeploy": "yarn build-css && yarn alpinjs-dev",
-    "deploy": "gh-pages -d public"
+    "build-css": "tailwindcss build app.css -o dist/style.css",
+    "alpinjs-dev": "npx esbuild index.js --outfile=dist/bundle.js --bundle",
+    "alpinjs-dev-w": "npx esbuild index.js --outfile=dist/bundle.js --bundle --watch",
+    "predeploy": "yarn alpinjs-dev",
+    "deploy": "gh-pages --dist dist --branch gh-pages"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/kosta-j/sorting-table/issues"
   },
-  "homepage": "https://github.com/kosta-j/sorting-table#readme",
+  "homepage": "https://kosta-j.github.io/sorting-table/",
   "devDependencies": {
     "autoprefixer": "^10.4.0",
     "postcss": "^8.3.11",
