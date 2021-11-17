@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWAPI</title>
+    <!-- when we run npm build style.css will appear -->
+    <link rel="stylesheet" href="style.css" />
+    <script src="bundle.js" defer></script>
+  </head>
+
+  <body x-data="app()">
+    <div
+      class="
+        flex
+        items-center
+        justify-center
+        fixed
+        w-screen
+        h-screen
+        bg-gray-200 bg-opacity-10
+      "
+      x-show="isLoading"
+    >
+      <div class="flex items-center justify-center space-x-2 animate-pulse">
+        <div class="w-8 h-8 bg-blue-400 rounded-full"></div>
+        <div class="w-8 h-8 bg-blue-400 rounded-full"></div>
+        <div class="w-8 h-8 bg-blue-400 rounded-full"></div>
+      </div>
+    </div>
+    <div class="flex flex-col items-center">
+      <h1 class="text-3xl text-blue-500">Star Wars characters</h1>
+      <div class="flex flex-col mt-8">
+        <div
+          class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+        >
+          <div
+            class="
+              inline-block
+              min-w-full
+              overflow-hidden
+              align-middle
+              border-b border-gray-200
+              shadow
+              sm:rounded-lg
+            "
+          >
+            <table class="min-w-full">
+              <thead>
+                <tr>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('name'))"
+                  >
+                    Name
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('height'))"
+                  >
+                    height
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('mass'))"
+                  >
+                    mass
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('birth_year'))"
+                  >
+                    birth year
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('gender'))"
+                  >
+                    gender
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('films'))"
+                  >
+                    count films
+                  </th>
+                  <th
+                    class="
+                      px-6
+                      py-3
+                      text-xs
+                      font-medium
+                      leading-4
+                      tracking-wider
+                      text-left text-gray-500
+                      uppercase
+                      border-b border-gray-200
+                      bg-gray-50
+                      cursor-pointer
+                    "
+                    @click="data.sort(compareValues('homeworld'))"
+                  >
+                    home planet name
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody class="bg-white" x-init="await getAllCharacters()">
+                <template x-for="hero in data" :key="hero.name">
+                  <tr>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div class="flex items-center">
+                        <div
+                          class="text-sm font-medium leading-5 text-gray-900"
+                          x-text="hero.name"
+                        ></div>
+                      </div>
+                    </td>
+
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.height"
+                      ></div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.mass"
+                      ></div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.birth_year"
+                      ></div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.gender"
+                      ></div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.films.length"
+                      ></div>
+                    </td>
+                    <td
+                      class="
+                        px-6
+                        py-4
+                        whitespace-no-wrap
+                        border-b border-gray-200
+                      "
+                    >
+                      <div
+                        class="text-sm leading-5 text-gray-500"
+                        x-text="hero.homeworld"
+                      ></div>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
