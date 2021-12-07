@@ -116,11 +116,21 @@ window.app = function () {
         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
           return 0;
         }
-        // could be improved - this part is valid for string and array data types only
-        const varA =
-          typeof a[key] === 'string' ? a[key].toLowerCase() : a[key].length;
-        const varB =
-          typeof b[key] === 'string' ? b[key].toLowerCase() : b[key].length;
+        let varA;
+        let varB;
+
+        if (!isNaN(Number(a[key])) || !isNaN(Number(b[key]))) {
+          varA = isNaN(Number(a[key])) ? a[key].length : Number(a[key]);
+          varB = isNaN(Number(b[key])) ? b[key].length : Number(b[key]);
+        } else {
+          varA =
+            typeof a[key] === 'string' ? a[key].toLowerCase() : a[key].length;
+          varB =
+            typeof b[key] === 'string' ? b[key].toLowerCase() : b[key].length;
+        }
+
+        console.log('varA:', varA);
+        console.log('varB:', varB);
 
         let comparison = 0;
         if (varA > varB) {
